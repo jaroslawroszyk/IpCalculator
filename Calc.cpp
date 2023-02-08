@@ -5,14 +5,35 @@
 #include <sstream>
 #include <fmt/core.h>
 #include <iomanip>
+#include <string_view>
+#include "Calc.hpp"
 
-auto converNumberToDec(std::vector<int> numbers) -> void
+auto Calculator::converDecToBin(const Numbers &numbers) -> void
 {
     for (const auto &el : numbers)
     {
         std::bitset<8> binary(el);
-        std::cout << el << " binary: " << binary << '\n';
+        std::cout << " Decimal: " << el << "\tBinary: " << binary << '\n';
     }
+}
+
+auto Calculator::convertBinToDec(const std::vector<std::string> &binary)
+{
+    std::vector<int> decimals{};
+    for (const auto &bin : binary)
+    {
+        int base = 1;
+        decimals.push_back(0); // ?
+        int size = bin.size();
+
+        for (int i = size - 1; i >= 0; i--)
+        {
+            if (bin[i] == '1')
+                decimals.back() += base;
+            base *= 2;
+        }
+    }
+    return decimals;
 }
 
 auto printBinaryIps(const std::vector<std::string> &ip_addresses) -> void
@@ -34,8 +55,24 @@ auto printBinaryIps(const std::vector<std::string> &ip_addresses) -> void
     }
 }
 
-int main()
+void binToDec()
 {
+    Calculator calculator;
+    std::vector<std::string> binary{"10101000", "00001010"}; // 168  10
+    std::vector<int> decimals = calculator.convertBinToDec(binary);
+    calculator.printBinToDec(binary, decimals);
+}
+
+void decToBin()
+{
+    Calculator calculator;
+    std::vector<int> input{168, 10, 255, 2};
+    calculator.converDecToBin(input);
+}
+
+void ipAddrToBin()
+{
+    Calculator calculator;
     std::vector<std::string> ip_addresses = {"172.16.0.0", "192.168.10.10 ",
                                              "255.255.255.0",
                                              "192.168.10.0",
@@ -48,13 +85,12 @@ int main()
                                              "10.172.2.8 ",
                                              "255.224.0.0 ",
                                              "10.160.0.0",
-                                             "27"
+                                             "27"};
+    // calculator.printBinaryIps(ip_addresses);
+}
 
-    };
-
-    printBinaryIps(ip_addresses);
-    // std::vector<int> input{168, 10, 255, 2};
-    // converNumberToDec(input);
+int main()
+{
     return 0;
 }
 
